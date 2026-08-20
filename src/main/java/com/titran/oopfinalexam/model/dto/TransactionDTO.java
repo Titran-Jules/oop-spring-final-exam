@@ -11,6 +11,6 @@ public record TransactionDTO(
         TransactionType transactionType,
         BigDecimal amount,
         String reason,
-        String account_id
+        String accountId
 ) {
 }
