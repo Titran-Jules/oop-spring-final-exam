@@ -57,7 +57,7 @@ public class TransactionRepository {
         }
     }
 
-    public List<TransactionDTO> findAll(TransactionType typeFilter) {
+    public List<TransactionDTO> findAllByType(TransactionType typeFilter) {
         boolean hasFilter = (typeFilter != null);
         String sql = """
                 SELECT id, created_at, transaction_type, amount, reason, account_id FROM transaction_table"
