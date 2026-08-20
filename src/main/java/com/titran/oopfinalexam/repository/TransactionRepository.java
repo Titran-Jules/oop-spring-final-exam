@@ -59,11 +59,9 @@ public class TransactionRepository {
 
     public List<TransactionDTO> findAllByType(TransactionType typeFilter) {
         boolean hasFilter = (typeFilter != null);
-        String sql = """
-                SELECT id, created_at, transaction_type, amount, reason, account_id FROM transaction_table"
+        String sql = "SELECT id, created_at, transaction_type, amount, reason, account_id FROM transaction_table"
                 + (hasFilter ? " WHERE transaction_type = ?::transaction_type" : "")
-                + " ORDER BY created_at DESC
-        """;
+                + " ORDER BY created_at DESC";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {

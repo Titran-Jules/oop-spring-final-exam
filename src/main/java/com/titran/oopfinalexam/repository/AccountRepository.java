@@ -43,7 +43,7 @@ public class AccountRepository {
         }
     }
 
-    public boolean existsById(String id) throws SQLException {
+    public boolean existsById(String id) {
         String sql = "SELECT 1 FROM account WHERE id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -51,6 +51,8 @@ public class AccountRepository {
             try (ResultSet rs = ps.executeQuery()) {
                 return rs.next();
             }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
