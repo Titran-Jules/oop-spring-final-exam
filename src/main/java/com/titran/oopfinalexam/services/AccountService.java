@@ -7,7 +7,9 @@ import com.titran.oopfinalexam.repository.TransactionRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.security.auth.login.AccountNotFoundException;
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.List;
 
 @Service
@@ -18,16 +20,15 @@ public class AccountService {
     private final TransactionRepository transactionRepository;
 
     public BigDecimal calculateAccountBalance(String accountId) {
-        List<TransactionDTO> transactions = transactionRepository.findByAccountId(accountId);
-
-        BigDecimal balance = BigDecimal.ZERO;
-        for (TransactionDTO tx : transactions) {
-            if ("IN".equalsIgnoreCase(tx.transactionType().name())) {
-                balance = balance.add(tx.amount());
-            } else if ("OUT".equalsIgnoreCase(tx.transactionType().name())) {
-                balance = balance.subtract(tx.amount());
+        try {
+            if (!accountRepository.existsById(accountId)) {
+                throw new AccountNotFoundException("Account with ID " + accountId + " not found");
             }
+
+            return transactionRepository.calculateBalanceByAccountId(accountId);
+
+        } catch (AccountNotFoundException e) {
+            throw new RuntimeException("Database error while fetching balance", e);
         }
-        return balance;
     }
 }
